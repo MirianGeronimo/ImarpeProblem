@@ -5,4 +5,3 @@ print(resul)
 with(resul,plot(tiempos,Poblacion,type = "o"))
 
 
-
