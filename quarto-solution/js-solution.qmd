@@ -15,7 +15,7 @@ abstract: |
 
 format:
   html:
-    self-contained: false
+    self-contained: true
     toc: true
     highlight-style: github
     theme: 
