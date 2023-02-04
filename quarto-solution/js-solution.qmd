@@ -15,7 +15,7 @@ abstract: |
 
 format:
   html:
-    self-contained: true
+    self-contained: false
     toc: true
     highlight-style: github
     theme: 
@@ -90,7 +90,7 @@ proporcionamos ciertos valores a los parámetros:
 
 ::: {.grid}
 
-::: {.g-col-4}
+::: {.g-col-6}
 
 ```{ojs}
 //| echo: false
@@ -103,7 +103,14 @@ viewof N0 = Inputs.number(
   [0, Infinity], 
   {step: 1, label: "Población inicial:", value: 7}
 )
+```
 
+::: 
+
+::: {.g-col-6}
+
+```{ojs}
+//| echo: false
 viewof r = Inputs.number(
   [0, Infinity], 
   {step: 0.1, label: "Tasa de crecimiento poblacional:", value: 2.4}
@@ -121,17 +128,22 @@ viewof t = Inputs.number(
 ```
 
 :::
+:::
 
-::: {.g-col-8}
+&nbsp;
 
 ```{ojs}
 //| echo: false
 Plot.plot({
-  height: 600,
-  marginRight: -50,
+  style: {
+    width: "100%",
+    backgroundColor: "rgb(0,0,0,.85)",
+    color: "peru"
+  },
+  height: 350,
   grid: true,
   x: {
-    label: "Tiempos (t)", domain: [0, t+2]
+    label: "Tiempos (t)", domain: [0, t]
   },
   y: {
     label: "Población (N_t)"
@@ -141,9 +153,6 @@ Plot.plot({
   ]
 })
 ```
-
-:::
-:::
 
 ## Discusión de resultados
 
