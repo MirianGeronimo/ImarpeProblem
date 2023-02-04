@@ -1,0 +1,162 @@
+---
+title: Simulación de una dinámica poblacional
+date: "2022-12-06"
+lang: es
+author:
+  - name: Mirian Andrea Geronimo Aparicio
+    email: mgeronimoa@uni.pe
+    affiliation: Facultad de Ciencias, Universidad Nacional de Ingeniería
+
+abstract-title: Resumen
+abstract: |
+  En el presente documento realizaremos la simulación de una dinámica poblacional usando el lenguaje de programación **JavaScript**.
+  Luego, mostraremos la gráfica para determinados 
+  valores de captura, tasa de crecimiento poblacional y capacidad de carga.
+
+format:
+  html:
+    self-contained: true
+    toc: true
+    highlight-style: github
+    theme: 
+      - yeti
+      - united
+    code-fold: true
+    code-summary: "Código"
+    code-tools: 
+      source: https://github.com/MirianGeronimo/ImarpeProblem
+---
+
+## Metodología
+
+Dinámica poblacional a simular:
+
+$$
+N_{t+1} = N_t + r N_t \left( 1 - \dfrac{N_t}{K} \right) - C_t
+\;,
+$$
+
+donde $N_t$ es la abundancia de la población en el tiempo
+$t$, $C_t$ es la captura en el intervalo $[t, t+1)$; $r$,
+la tasa de crecimiento poblacional, y; $K$, a capacidad de carga.
+
+A continuación, presentamos la implementación en **JavaScript**:
+
+&nbsp; 
+
+Definimos la función captura, la cual,
+para este modelo, consideraremos *constante*.
+
+```{ojs}
+function C(t) {
+  // Este valor se define más adelante.
+  return captura;
+}
+```
+
+Se define la función abundancia de la población, 
+que posee los siguientes parámetros: 
+tiempo $t$, población inicial $N_0$, 
+tasa de crecimiento poblacional $r$ y capacidad de carga $K$.
+
+```{ojs}
+function N(t, N0, r, K) {
+  let myVector2 = [N0];
+  let tiempos= [0];
+
+  for (let i=0; i<=t-1; i++) {
+    N0 = N0 + r*N0*(1 - N0/K) - C(i)
+    myVector2.push(N0);
+    tiempos.push(i+1);
+  }
+
+  return myVector2.at(-1);
+}
+```
+
+```{ojs}
+//| echo: false
+evolucion = [...Array(t+1).keys()]
+  .map(function (tiempo) {
+    let poblacion = N(tiempo, N0, r, K)
+    return {"t": tiempo, "poblacion": poblacion}
+  })
+```
+
+## Resultados
+
+Para verificar la funcionalidad de la implementación,
+proporcionamos ciertos valores a los parámetros:
+
+::: {.grid}
+
+::: {.g-col-4}
+
+```{ojs}
+//| echo: false
+viewof captura = Inputs.number(
+  [0, Infinity], 
+  {step: 1, label: "Función (constante) captura:", value: 10}
+)
+
+viewof N0 = Inputs.number(
+  [0, Infinity], 
+  {step: 1, label: "Población inicial:", value: 7}
+)
+
+viewof r = Inputs.number(
+  [0, Infinity], 
+  {step: 0.1, label: "Tasa de crecimiento poblacional:", value: 2.4}
+)
+
+viewof K = Inputs.number(
+  [0, Infinity], 
+  {step: 0.1, label: "Capacidad de carga:", value: 100}
+)
+
+viewof t = Inputs.number(
+  [0, Infinity], 
+  {step: 1, label: "Tiempo:", value: 20}
+)
+```
+
+:::
+
+::: {.g-col-8}
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  height: 600,
+  marginRight: -50,
+  grid: true,
+  x: {
+    label: "Tiempos (t)", domain: [0, t+2]
+  },
+  y: {
+    label: "Población (N_t)"
+  },
+  marks: [
+    Plot.line(evolucion, {x: "t", y: "poblacion"})
+  ]
+})
+```
+
+:::
+:::
+
+## Discusión de resultados
+
+- Pese a que empleamos una función de carga $C_t$ constante, 
+fácilmente se podría editar la implementación, de manera que
+tal función sí depende del tiempo $t$.
+
+- En el gráfico creado, observamos cierto movimiento
+oscilatorio a partir del tiempo $t = 5$. 
+Esto sucede debido al valor proporcionado de $r$.
+
+## Conclusiones
+
+- Para una gran cantidad de posibles valores de los parámetros
+establecidos, se observa un comportamiento **periódico**
+de la población $N_t$ a lo largo del tiempo.
